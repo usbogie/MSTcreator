@@ -4,7 +4,7 @@ import copy
 import collections
 from Node import Node
 
-def runKruskalls(trees):
+def runKruskals(trees):
 	MSTs = list()
 	for tree in trees:
 		MSTs.append(runKruskallsOnTree(tree))
