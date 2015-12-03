@@ -2,14 +2,12 @@
 
 import copy
 import collections
+import GenGraph
 from Node import Node
 
-<<<<<<< HEAD
 parent = dict()
 rank = dict()
 
-=======
->>>>>>> e7a5803af2a39f6444b5eae872a92cc17a841328
 def runKruskals(trees):
 	MSTs = list()
 	for tree in trees:
@@ -72,14 +70,5 @@ def sortEdges(tree):
 	edges = dict()
 	for n in tree:
 		for m in n.adjList:
-<<<<<<< HEAD
 			edges[n.adjList[m]] = list([n, m])
 	return collections.OrderedDict(sorted(edges.items()))
-=======
-			n1 = copy.copy(n)
-			m1 = copy.copy(m)
-			n1.adjList = {}
-			m1.adjList = {}
-			edges[n.adjList[m]] = list([n1, m1])
-	return collections.OrderedDict(sorted(edges.items()))
->>>>>>> e7a5803af2a39f6444b5eae872a92cc17a841328
