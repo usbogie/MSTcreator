@@ -2,7 +2,6 @@
 
 import copy
 import collections
-import GenGraph
 from Node import Node
 
 parent = dict()
