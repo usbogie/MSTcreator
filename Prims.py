@@ -11,37 +11,35 @@ def runPrims(trees):
 
 def runPrimsOnTree(tree):
 	mstNodes = list()
-	temp = tree.keys()[0] # Get the first node in the tree
-	first = Node(temp.xloc,temp.yloc,temp.kval,dict())
+	treeToMst = dict()
+	mstToTree = dict()
+	for n in tree:
+		m = copy.copy(n)
+		m.adjList = {}
+		treeToMst[n] = m
+		mstToTree[m] = n
+	first = treeToMst[tree.keys()[0]]
 	mstNodes.append(first)
 	done = False
 	while (not done):
 		if len(mstNodes) == len(tree):
 			done = True
 		else:
-			mstNodes.append(getNextNode(mstNodes, tree))
+			mstNodes.append(getNextNode(mstNodes, tree, treeToMst, mstToTree))
 	return mstNodes
 
-def getNextNode(mstNodes, tree):
+def getNextNode(mstNodes, tree, treeToMst, mstToTree):
 	lowestNode = Node(0, 0, 0, {})
 	lowestWeight = -1
 	parent = Node(0, 0, 0, {})
 	for n in mstNodes:
-		treeNode = Node(0, 0, 0, {})
-		for m in tree:
-			if n == m:
-				treeNode = m
+		treeNode = mstToTree[n]
 		for p in treeNode.adjList:
-			inMst = False
-			for q in mstNodes:
-				if p == q:
-					inMst = True
-			if (treeNode.adjList[p] < lowestWeight or lowestWeight == -1) and not inMst:
+			temp = treeToMst[p]
+			if (treeNode.adjList[p] < lowestWeight or lowestWeight == -1) and not temp in mstNodes:
 				lowestWeight = treeNode.adjList[p]
-				lowestNode = p
+				lowestNode = temp
 				parent = n
-	child = copy.copy(lowestNode)
-	parent.adjList[child] = lowestWeight
-	child.adjList = {}
-	child.adjList[parent] = lowestWeight
-	return child
+	parent.adjList[lowestNode] = lowestWeight
+	lowestNode.adjList[parent] = lowestWeight
+	return lowestNode

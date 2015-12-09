@@ -11,49 +11,44 @@ def runSollins(trees):
 
 def runSollinsOnTree(tree):
 	subtrees = list()
+	treeToMst = dict()
+	mstToTree = dict()
 	for n in tree:
 		t = list()
-		newN = copy.copy(n)
-		newN.adjList = {}
-		t.append(newN)
+		m = copy.copy(n)
+		m.adjList = {}
+		t.append(m)
 		subtrees.append(t)
+		treeToMst[n] = m
+		mstToTree[m] = n
 	while len(subtrees) != 1:
-		subtrees = runPhase(subtrees, tree)
+		subtrees = runPhase(subtrees, tree, treeToMst, mstToTree)
 	return subtrees.pop(0)
 
-def runPhase(subtrees, tree):
+def runPhase(subtrees, tree, treeToMst, mstToTree):
 	for subtree in subtrees:
 		lowestNode = Node(0, 0, 0, {})
 		lowestWeight = -1
 		parent = Node(0, 0, 0, {})
 		for n in subtree:
-			treeNode = Node(0, 0, 0, {})
-			for m in tree:
-				if n == m:
-					treeNode = m
+			treeNode = mstToTree[n]
 			for p in treeNode.adjList:
-				inComponent = False
-				for q in subtree:
-					if p == q:
-						inComponent = True
-				if not inComponent and (treeNode.adjList[p] < lowestWeight or lowestWeight == -1):
+				temp = treeToMst[p]
+				if temp not in subtree and (treeNode.adjList[p] < lowestWeight or lowestWeight == -1):
 					lowestWeight = treeNode.adjList[p]
-					lowestNode = p
+					lowestNode = temp
 					parent = n
 		subtrees = combineComponents(subtrees, subtree, parent, lowestNode, lowestWeight)
 	return subtrees
 
 def combineComponents(subtrees, subtree, parent, child, lowestWeight):
 	childSubtree = list()
-	actChild = Node(0, 0, 0, {})
 	for sub in subtrees:
-		for x in sub:
-			if x == child:
-				childSubtree = sub
-				actChild = x
-	parent.adjList[actChild] = lowestWeight
-	actChild.adjList[parent] = lowestWeight
+		if child in sub:
+			childSubtree = sub
+	parent.adjList[child] = lowestWeight
+	child.adjList[parent] = lowestWeight
 	for y in subtree:
-		childSubtree.append(copy.copy(y)) 
+		childSubtree.append(y) 
 	subtrees.remove(subtree)
 	return subtrees

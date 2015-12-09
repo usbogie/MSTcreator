@@ -17,31 +17,30 @@ def runKruskals(trees):
 
 def runKruskallsOnTree(tree):
 	mstNodes = list()
+	treeToMst = dict()
 	for n in tree:
 		makeSet(n)
+		m = copy.copy(n)
+		m.adjList = {}
+		treeToMst[n] = m
 	edges = sortEdges(tree)
 	for edge in edges:
-		weight, nodes = (edge, edges[edge])
+		weight, nodes = edge.popitem()
 		n1, n2 = nodes[0], nodes[1]
 		if find(n1) != find(n2):
 			union(n1, n2)
-			n1Copy = copy.copy(n1)
-			n2Copy = copy.copy(n2)
+			n1Copy = treeToMst[n1]
+			n2Copy = treeToMst[n2]
 			n1InMST, n2InMST = False, False
-			for m in mstNodes:
-				if n1Copy == m:
-					n1Copy = m
-					n1InMST = True
-				if n2Copy == m:
-					n2Copy = m
-					n2InMST = True
+			if n1Copy in mstNodes:
+				n1InMST = True
+			if n2Copy in mstNodes:
+				n2InMST = True
 			if not n1InMST:
 				mstNodes.append(n1Copy)
-				n1Copy.adjList = {}	
 			n1Copy.adjList[n2Copy] = weight
 			if not n2InMST:
 				mstNodes.append(n2Copy)
-				n2Copy.adjList = {}
 			n2Copy.adjList[n1Copy] = weight
 	return mstNodes
 
@@ -66,8 +65,11 @@ def union(n1, n2):
 				rank[root2] += 1
 
 def sortEdges(tree):
-	edges = dict()
+	edges = list()
 	for n in tree:
 		for m in n.adjList:
-			edges[n.adjList[m]] = list([n, m])
-	return collections.OrderedDict(sorted(edges.items()))
+			temp = dict()
+			temp[n.adjList[m]] = list([n, m])
+			edges.append(temp)
+	edges = sorted(edges)
+	return sorted(edges)

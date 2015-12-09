@@ -4,6 +4,7 @@ import GenGraph
 import Sollins
 import Prims
 import Kruskals
+import time
 from Node import Node
 
 def driver():
@@ -32,35 +33,35 @@ def driver():
 		maxWeight = int(raw_input('> '))
 	trees = GenGraph.GenerateGraph(totalNodes, graphSize, maxWeight, kval, edgeMethod)
 	print "Here are the adjacency lists of the trees randomly generated using your inputs (format = ((x,y,) weight)):"
-	print "Trees:"
-	for t in trees:
-		print "Tree:{"
-		for x in t:
-			print printNode(x)+": {",
-			for y in x.adjList:
-				print "("+printNode(y)+", "+str(x.adjList[y])+")",
-			print "}"
-		print "}"
-	print "Now, to find the MST of each of the generated trees, please select an algorithm to use."
-	print "1: Prim's algorithm"
-	print "2: Kruskal's algorithm"
-	print "3: Sollin's algorithm"
-	mstMethod = int(raw_input('> '))
-	MSTs = list()
-	if mstMethod == 1:
-		MSTs = Prims.runPrims(trees)
-	elif mstMethod == 2:
-		MSTs = Kruskals.runKruskals(trees)
-	elif mstMethod == 3:
-		MSTs = Sollins.runSollins(trees)
+	printTrees(trees, "Tree")
 	print "Here are the MSTs for each of the generated trees."
-	print "MSTS:"
-	for t in MSTs:
-		print "MST:{"
+	start= time.clock()
+	MSTs = Prims.runPrims(trees)
+	pTot = (time.clock()-start)
+	print "Result of Prim's"
+	printTrees(MSTs,"MST")
+	start= time.clock()
+	MSTs = Kruskals.runKruskals(trees)
+	kTot = (time.clock()-start)
+	print "Result of Kruskal's"
+	printTrees(MSTs,"MST")
+	start= time.clock()
+	MSTs = Sollins.runSollins(trees)
+	sTot = (time.clock()-start)
+	print "Result of Sollin's"
+	printTrees(MSTs,"MST")
+	print "Prim's Algorithm Run Time = "+str(pTot)
+	print "Kruskal's Algorithm Run Time = "+str(kTot)
+	print "Sollin's Algorithm Run Time = "+str(sTot)
+
+def printTrees(trees, term):
+	print term+"s:"
+	for t in trees:
+		print term+":{"
 		for x in t:
 			print printNode(x)+": {",
 			for y in x.adjList:
-				print "("+printNode(y)+", "+str(x.adjList[y])+")",
+				print "("+printNode(y)+", "+str(round(x.adjList[y],2))+")",
 			print "}"
 		print "}"
 
