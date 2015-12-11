@@ -32,14 +32,18 @@ def getNextNode(mstNodes, tree, treeToMst, mstToTree):
 	lowestNode = Node(0, 0, 0, {})
 	lowestWeight = -1
 	parent = Node(0, 0, 0, {})
+	treeChild = Node(0, 0, 0, {})
 	for n in mstNodes:
 		treeNode = mstToTree[n]
 		for p in treeNode.adjList:
-			temp = treeToMst[p]
-			if (treeNode.adjList[p] < lowestWeight or lowestWeight == -1) and not temp in mstNodes:
+			if (treeNode.adjList[p] < lowestWeight or lowestWeight == -1) and not treeToMst[p] in mstNodes:
 				lowestWeight = treeNode.adjList[p]
-				lowestNode = temp
+				lowestNode = treeToMst[p]
+				treeChild = p
 				parent = n
+	treeParent = mstToTree[parent]
+	del treeParent.adjList[treeChild]
+	del treeChild.adjList[treeParent]
 	parent.adjList[lowestNode] = lowestWeight
 	lowestNode.adjList[parent] = lowestWeight
 	return lowestNode

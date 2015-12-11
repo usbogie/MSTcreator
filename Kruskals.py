@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
 import copy
-import collections
 from Node import Node
 
 parent = dict()

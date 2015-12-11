@@ -5,6 +5,7 @@ import Sollins
 import Prims
 import Kruskals
 import time
+import copy
 from Node import Node
 
 def driver():
@@ -35,18 +36,21 @@ def driver():
 	print "Here are the adjacency lists of the trees randomly generated using your inputs (format = ((x,y,) weight)):"
 	printTrees(trees, "Tree")
 	print "Here are the MSTs for each of the generated trees."
+	pTrees = copy.deepcopy(trees)
 	start= time.clock()
-	MSTs = Prims.runPrims(trees)
+	MSTs = Prims.runPrims(pTrees)
 	pTot = (time.clock()-start)
 	print "Result of Prim's"
 	printTrees(MSTs,"MST")
+	kTrees = copy.deepcopy(trees)
 	start= time.clock()
-	MSTs = Kruskals.runKruskals(trees)
+	MSTs = Kruskals.runKruskals(kTrees)
 	kTot = (time.clock()-start)
 	print "Result of Kruskal's"
 	printTrees(MSTs,"MST")
+	sTrees = copy.deepcopy(trees)
 	start= time.clock()
-	MSTs = Sollins.runSollins(trees)
+	MSTs = Sollins.runSollins(sTrees)
 	sTot = (time.clock()-start)
 	print "Result of Sollin's"
 	printTrees(MSTs,"MST")
